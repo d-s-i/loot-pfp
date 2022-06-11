@@ -6,7 +6,7 @@ import { IERC721Metadata } from "@openzeppelin/contracts/token/ERC721/extensions
 
 import { ILootPFPFactory } from "./interfaces/ILootPFPFactory.sol";
 
-contract LootPFP is ERC721 {
+contract PFPContract is ERC721 {
 
     address immutable private _factory;
 

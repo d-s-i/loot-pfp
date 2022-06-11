@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 import { ILootPFPFactory } from "./interfaces/ILootPFPFactory.sol";
 
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { LootPFP } from "./LootPFP.sol";
+import { PFPContract } from "./PFPContract.sol";
 
 contract LootPFPFactory is Ownable, ILootPFPFactory {
 
@@ -87,7 +87,7 @@ contract LootPFPFactory is Ownable, ILootPFPFactory {
         _allLootCollectionsSlug.push(slug);
         _lootverseCollections[slug] = lootCollection;
         // create new pfp contract from factory
-        LootPFP lootPfpContract = new LootPFP(address(this), slug, symbol);
+        PFPContract lootPfpContract = new PFPContract(address(this), slug, symbol);
         // add new contract address to _lootPfpsCollections
         _lootPfpsContracts[lootCollection] = address(lootPfpContract);
     }

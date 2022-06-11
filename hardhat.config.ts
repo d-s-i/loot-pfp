@@ -17,6 +17,6 @@ task("accounts", "Prints the list of accounts", async (args, hre) => {
 export default {
   solidity: "0.8.1",
   mocha: {
-    timeout: 20000
+    timeout: 200000
   }
 };
