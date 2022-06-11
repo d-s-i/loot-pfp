@@ -25,7 +25,12 @@ contract LootPFP is ERC721 {
         _;
     }
 
-    function setPfp(uint256 lootId, address pfp) public lootOwner(lootId) {
+    modifier usableCollection(address pfp) {
+        require(bytes(ILootPFPFactory(_factory).slugForCollection(pfp)).length != 0, "LootPFP - Pfp collection not set");
+        _;
+    }
+
+    function setPfp(uint256 lootId, address pfp) public lootOwner(lootId) usableCollection(pfp) {
         _pfp[lootId] = pfp;
     }
 

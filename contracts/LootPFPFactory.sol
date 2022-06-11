@@ -1,5 +1,7 @@
 pragma solidity ^0.8.0;
 
+import { ILootPFPFactory } from "./interfaces/ILootPFPFactory.sol";
+
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { LootPFP } from "./LootPFP.sol";
 
@@ -14,9 +16,11 @@ contract LootPFPFactory is Ownable {
     mapping(string => address) private _lootverseCollections;
 
     // slug => pfpAddress (e.g. HyperLoot)
-    mapping(string => address) private _whitelistedPfpsCollections;
+    mapping(string => address) private _usablePfpsCollections;
+    // pfpAddress => slug
+    mapping(address => string) private _slugForPfpCollection;
 
-    // lootCollection (e.g. Loot or GenesisLoot) => LootPFP 
+    // lootverseCollection (e.g. Loot or GenesisLoot) => LootPFP 
     mapping(address => address) private _lootPfpsContracts;
 
     constructor(address loot_) {
@@ -38,7 +42,7 @@ contract LootPFPFactory is Ownable {
     }
 
     function getPfpCollection(string calldata slug) public view returns(address) {
-        return _whitelistedPfpsCollections[slug];
+        return _usablePfpsCollections[slug];
     }
 
     function getLootversePfpContract(address lootCollection) public view returns(address) {
@@ -50,6 +54,10 @@ contract LootPFPFactory is Ownable {
         return _lootPfpsContracts[lootCollection];
     }
 
+    function slugForCollection(address pfp) public view returns(string memory) {
+        return _slugForPfpCollection[pfp];
+    }
+
     function loot() public view returns(address) {
         return _loot;
     }
@@ -57,14 +65,15 @@ contract LootPFPFactory is Ownable {
     ///////////
     // SETTERS
     function addPfpCollection(string calldata slug, address pfpCollection) onlyOwner public {
-        require(_whitelistedPfpsCollections[slug] == address(0), "LootPFPFactory::addPfpCollection - PFP collection already set");
+        require(_usablePfpsCollections[slug] == address(0), "LootPFPFactory::addPfpCollection - PFP collection already set");
         _allWhitelistedPfpsCollectionsSlug.push(slug);
-        _whitelistedPfpsCollections[slug] = pfpCollection;
+        _slugForPfpCollection[pfpCollection] = slug;
+        _usablePfpsCollections[slug] = pfpCollection;
     }
 
     function modifyPfpCollection(string calldata slug, address pfpCollection) onlyOwner public {
-        require(_whitelistedPfpsCollections[slug] != address(0), "LootPFPFactory::addPfpCollection - PFP collection non existant");
-        _whitelistedPfpsCollections[slug] = pfpCollection;
+        require(_usablePfpsCollections[slug] != address(0), "LootPFPFactory::addPfpCollection - PFP collection non existant");
+        _usablePfpsCollections[slug] = pfpCollection;
     }
 
     function addLootverseCollection(string calldata slug, string calldata symbol, address lootCollection) onlyOwner public {

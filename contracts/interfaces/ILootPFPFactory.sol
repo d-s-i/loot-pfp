@@ -11,6 +11,7 @@ interface ILootPFPFactory {
     function getPfpCollection(string calldata slug) external view returns(address);
     function getLootversePfpContract(address lootCollection) external view returns(address);
     function getLootversePfpFromSlug(string calldata slug) external view returns(address);
+    function slugForCollection(address pfp) external view returns(string memory);
     function loot() external view returns(address);
     
     ///////////
