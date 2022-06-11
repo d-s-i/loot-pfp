@@ -5,7 +5,7 @@ import { ILootPFPFactory } from "./interfaces/ILootPFPFactory.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { LootPFP } from "./LootPFP.sol";
 
-contract LootPFPFactory is Ownable {
+contract LootPFPFactory is Ownable, ILootPFPFactory {
 
     address private _loot;
 
@@ -31,58 +31,58 @@ contract LootPFPFactory is Ownable {
 
     ///////////
     // GETTERS
-    function getAllLootverseCollectionsSlugs() public view returns(string[] memory) {
+    function getAllLootverseCollectionsSlugs() public view override returns(string[] memory) {
         return(_allLootCollectionsSlug);
     }   
 
-    function getAllUsablePfpsCollectionsSlug() public view returns(string[] memory) {
+    function getAllUsablePfpsCollectionsSlug() public view override returns(string[] memory) {
         return(_allUsablePfpsCollectionsSlug);
     } 
 
-    function getLootverseCollection(string calldata slug) public view returns(address) {
+    function getLootverseCollection(string calldata slug) public view override returns(address) {
         return _lootverseCollections[slug];
     }
 
-    function getPfpCollection(string calldata slug) public view returns(address) {
+    function getPfpCollection(string calldata slug) public view override returns(address) {
         return _usablePfpsCollections[slug];
     }
 
-    function getLootversePfpContract(address lootCollection) public view returns(address) {
+    function getLootversePfpContract(address lootCollection) public view override returns(address) {
         return _lootPfpsContracts[lootCollection];
     }
 
-    function getLootversePfpFromSlug(string calldata slug) public view returns(address) {
+    function getLootversePfpContractFromSlug(string calldata slug) public view override returns(address) {
         address lootCollection = getLootverseCollection(slug);
         return _lootPfpsContracts[lootCollection];
     }
 
-    function slugForPfpCollection(address pfp) public view returns(string memory) {
+    function slugForPfpCollection(address pfp) public view override returns(string memory) {
         return _slugForPfpCollection[pfp];
     }
 
-    function slugForLootverseCollection(address lootverseCollection) public view returns(string memory) {
+    function slugForLootverseCollection(address lootverseCollection) public view override returns(string memory) {
         return _slugForLootverseCollection[lootverseCollection];
     }
 
-    function loot() public view returns(address) {
+    function loot() public view override returns(address) {
         return _loot;
     }
     
     ///////////
     // SETTERS
-    function addPfpCollection(string calldata slug, address pfpCollection) onlyOwner public {
+    function addPfpCollection(string calldata slug, address pfpCollection) onlyOwner public override {
         require(_usablePfpsCollections[slug] == address(0), "LootPFPFactory::addPfpCollection - PFP collection already set");
         _allUsablePfpsCollectionsSlug.push(slug);
         _slugForPfpCollection[pfpCollection] = slug;
         _usablePfpsCollections[slug] = pfpCollection;
     }
 
-    function modifyPfpCollection(string calldata slug, address pfpCollection) onlyOwner public {
+    function modifyPfpCollection(string calldata slug, address pfpCollection) onlyOwner public override {
         require(_usablePfpsCollections[slug] != address(0), "LootPFPFactory::addPfpCollection - PFP collection non existant");
         _usablePfpsCollections[slug] = pfpCollection;
     }
 
-    function addLootverseCollection(string calldata slug, string calldata symbol, address lootCollection) onlyOwner public {
+    function addLootverseCollection(string calldata slug, string calldata symbol, address lootCollection) onlyOwner public override {
         require(_lootverseCollections[slug] == address(0), "LootPFPFactory::addLootCollection - PFP collection already set");
         _allLootCollectionsSlug.push(slug);
         _lootverseCollections[slug] = lootCollection;
@@ -92,12 +92,12 @@ contract LootPFPFactory is Ownable {
         _lootPfpsContracts[lootCollection] = address(lootPfpContract);
     }
 
-    function modifyLootverseCollection(string calldata slug, address lootCollection) onlyOwner public {
+    function modifyLootverseCollection(string calldata slug, address lootCollection) onlyOwner public override {
         require(_lootverseCollections[slug] != address(0), "LootPFPFactory::addLootCollection - Loot collection non existant");
         _lootverseCollections[slug] = lootCollection;
     }
 
-    function setLoot(address newLoot) onlyOwner public {
+    function setLoot(address newLoot) onlyOwner public override {
         _loot = newLoot;
     }
 
