@@ -26,7 +26,7 @@ contract LootPFP is ERC721 {
     }
 
     modifier usableCollection(address pfp) {
-        require(bytes(ILootPFPFactory(_factory).slugForCollection(pfp)).length != 0, "LootPFP - Pfp collection not set");
+        require(bytes(ILootPFPFactory(_factory).slugForPfpCollection(pfp)).length != 0, "LootPFP - Pfp collection not set");
         _;
     }
 

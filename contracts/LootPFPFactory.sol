@@ -10,10 +10,12 @@ contract LootPFPFactory is Ownable {
     address private _loot;
 
     string[] private _allLootCollectionsSlug;
-    string[] private _allWhitelistedPfpsCollectionsSlug;
+    string[] private _allUsablePfpsCollectionsSlug;
 
     // slug => lootAddress (e.g. Loot or GenesisLoot)
     mapping(string => address) private _lootverseCollections;
+    // lootAddress => slug
+    mapping(address => string) private _slugForLootverseCollection;
 
     // slug => pfpAddress (e.g. HyperLoot)
     mapping(string => address) private _usablePfpsCollections;
@@ -33,8 +35,8 @@ contract LootPFPFactory is Ownable {
         return(_allLootCollectionsSlug);
     }   
 
-    function getAllWhitelistedPfpsCollectionsSlug() public view returns(string[] memory) {
-        return(_allWhitelistedPfpsCollectionsSlug);
+    function getAllUsablePfpsCollectionsSlug() public view returns(string[] memory) {
+        return(_allUsablePfpsCollectionsSlug);
     } 
 
     function getLootverseCollection(string calldata slug) public view returns(address) {
@@ -54,8 +56,12 @@ contract LootPFPFactory is Ownable {
         return _lootPfpsContracts[lootCollection];
     }
 
-    function slugForCollection(address pfp) public view returns(string memory) {
+    function slugForPfpCollection(address pfp) public view returns(string memory) {
         return _slugForPfpCollection[pfp];
+    }
+
+    function slugForLootverseCollection(address lootverseCollection) public view returns(string memory) {
+        return _slugForLootverseCollection[lootverseCollection];
     }
 
     function loot() public view returns(address) {
@@ -66,7 +72,7 @@ contract LootPFPFactory is Ownable {
     // SETTERS
     function addPfpCollection(string calldata slug, address pfpCollection) onlyOwner public {
         require(_usablePfpsCollections[slug] == address(0), "LootPFPFactory::addPfpCollection - PFP collection already set");
-        _allWhitelistedPfpsCollectionsSlug.push(slug);
+        _allUsablePfpsCollectionsSlug.push(slug);
         _slugForPfpCollection[pfpCollection] = slug;
         _usablePfpsCollections[slug] = pfpCollection;
     }
