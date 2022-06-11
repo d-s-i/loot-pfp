@@ -38,7 +38,7 @@ contract PFPContract is ERC721 {
         _pfpId[lootId] = pfpId;
     }
 
-    function setPfpAndId(uint256 lootId, address pfp, uint256 pfpId) public lootOwner(lootId) usabelCollection(pfp) {
+    function setPfpAndId(uint256 lootId, address pfp, uint256 pfpId) public lootOwner(lootId) usableCollection(pfp) {
         _pfp[lootId] = pfp;
         _pfpId[lootId] = pfpId;
 
