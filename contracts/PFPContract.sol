@@ -38,6 +38,12 @@ contract PFPContract is ERC721 {
         _pfpId[lootId] = pfpId;
     }
 
+    function setPfpAndId(uint256 lootId, address pfp, uint256 pfpId) public lootOwner(lootId) usabelCollection(pfp) {
+        _pfp[lootId] = pfp;
+        _pfpId[lootId] = pfpId;
+
+    }
+
     function tokenURI(uint256 lootId) public view virtual override returns (string memory) {
         return IERC721Metadata(_pfp[lootId]).tokenURI(_pfpId[lootId]);
     }
